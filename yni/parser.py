@@ -1,14 +1,14 @@
 import re
 from typing import Dict, Any
 
-from .header import Header
+from .header import Header, BaseClass
 
 
 HEADER_REGEX = re.compile("^#(.*)")
 KEY_VALUE_REGEX = re.compile("(.*?):(.*)")
 
 
-class Yni:
+class Yni(BaseClass):
     def __init__(self) -> None:
         self.variables: Dict[str, Header] = {}
 
