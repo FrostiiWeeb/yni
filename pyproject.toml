@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "yni"
-version = "0.0.2"
+version = "0.0.3"
 description = "A parser for the yni config file."
 authors = ["Alex Hutz <frostiiweeb@gmail.com>"]
 license = "MPL-2.0"
@@ -9,12 +9,9 @@ homepage = "https://github.com/FrostiiWeeb/yni"
 repository = "https://github.com/FrostiiWeeb/yni"
 keywords = ['yni', 'config', 'parser']
 build = "build.py"
-packages = [
-    { include = "yni" },
-]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
@@ -54,5 +51,5 @@ strict_equality = true
 ignore_missing_imports = true
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.0", "setuptools>=42"]
 build-backend = "poetry.core.masonry.api"

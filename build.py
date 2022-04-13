@@ -1,3 +1,4 @@
+import setuptools
 import re
 
 with open("requirements.txt", "r") as f:
@@ -12,4 +13,10 @@ def build(setup_kwargs: dict):
     """
     This function is mandatory in order to build the extensions.
     """
-    setup_kwargs.update({"install_requires": requirements, "version": version})
+    setup_kwargs.update(
+        {
+            "install_requires": requirements,
+            "version": version,
+            "packages": setuptools.find_packages(exclude=["tests"], include=["yni"]),
+        }
+    )
