@@ -8,6 +8,10 @@ readme = 'README.rst'
 homepage = "https://github.com/FrostiiWeeb/yni"
 repository = "https://github.com/FrostiiWeeb/yni"
 keywords = ['yni', 'config', 'parser']
+build = "build.py"
+packages = [
+    { include = "yni" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
