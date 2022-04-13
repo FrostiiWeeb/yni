@@ -46,7 +46,3 @@ class Yni:
         return self.variables[name]
     def __setitem__(self, name: str, value: Any):
         self.variables[name] = value
-
-if __name__ == "__main__": # testing
-    yni = Yni.from_file("test.yni")
-    print(yni["bot"].prefix) # errors on this one
