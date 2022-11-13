@@ -29,6 +29,18 @@ class Yni(BaseClass):
             else:
                 match = KEY_VALUE_REGEX.search(line)
                 key, value = match.group(1), match.group(2)
+                key = key.strip("\t")
+                value = value.strip(" ")
+                if value.startswith("env("):
+                    try:
+                        import dotenv
+                    except ImportError:
+                        raise Exception("python-dotenv library is needed for env(..., ...)")
+                    value = value[4:-1]
+                    filename, keyname = value.split(",")
+                    filename = filename.strip(" ")
+                    keyname = keyname.strip(" ")
+                    value = dotenv.get_key(filename, keyname)
                 current_header[key] = value
 
         yni = cls()
