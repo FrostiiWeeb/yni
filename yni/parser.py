@@ -22,7 +22,7 @@ class Yni(BaseClass):
                 continue
             if line.startswith("#"):
                 match = HEADER_REGEX.search(line)
-                name = match.group(1)
+                name = (match.group(1)).strip(" ")
                 current_header = ret[name] = {}
             elif line in ["[", "]"]:
                 pass
