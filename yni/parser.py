@@ -6,20 +6,33 @@ from .header import Header, BaseClass
 
 HEADER_REGEX = re.compile("^#(.*)")
 KEY_VALUE_REGEX = re.compile("(.*?):(.*)")
+SETTINGS_REGEX = re.compile("^(.*):(.*)")
+SETTINGS = [".set_is_list"]
 
 
 class Yni(BaseClass):
     def __init__(self) -> None:
         self.variables: Dict[str, Header] = {}
+        self.settings: Dict[str, bool] = {".set_is_list": False}
 
     @classmethod
     def from_string(cls, string: str):
         ret = {}
+        settings = {}
         current_header = ret
 
         for line in string.splitlines():
             if line == "":
                 continue
+            if line.startswith("."):
+                match = SETTINGS_REGEX.search(line)
+                setting, value = (match.group(1)).strip(" "), (match.group(2)).strip(" ")
+                if setting not in SETTINGS:
+                    raise ValueError("Setting '%s' is not a valid setting." % setting)
+                if value not in ["0", "1"]:
+                    raise ValueError("Setting value of '%s' is not valid." % setting)
+                values = {0: False, 1: True}
+                settings[setting] = values[int(value)]
             if line.startswith("#"):
                 match = HEADER_REGEX.search(line)
                 name = (match.group(1)).strip(" ")
@@ -41,11 +54,23 @@ class Yni(BaseClass):
                     filename = filename.strip(" ")
                     keyname = keyname.strip(" ")
                     value = dotenv.get_key(filename, keyname)
+                elif value.startswith("{"):
+                    content_raw_list = [char for char in line if char not in ["{", "}"]]
+                    for i, char in enumerate(content_raw_list):
+                        if (char == "," and content_raw_list[i+1] == " ") or (char == ","):
+                            content_raw_list[i] = "|"
+                    content_raw = "".join(content_raw_list)
+                    content_stripped = content_raw.replace("|", " ")
+                    content_list_before = content_stripped.split(" ")
+                    content_list_before.pop(0)
+                    content_list = [cont for cont in content_list_before if cont]
+                    value = set(content_list) if settings[".set_is_list"] is False else content_list
                 current_header[key] = value
 
         yni = cls()
         for header, attributes in ret.items():
             yni.variables[header] = Header(header, attributes)
+        yni.settings = settings
         return yni
 
     @classmethod
