@@ -11,4 +11,4 @@ txt = """
 
 yn = yni.Yni()
 d = yn.from_string(txt)
-print(d.test.tokens) # {b, a} -> sets are not in order
+print(d.test.tokens) # {b, a} or {a, b} -> sets are not in order
