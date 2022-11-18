@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "yni"
-version = "0.0.4"
+version = "0.1.3"
 description = "A parser for the yni config file."
 authors = ["Alex Hutz <frostiiweeb@gmail.com>"]
 license = "MPL-2.0"
