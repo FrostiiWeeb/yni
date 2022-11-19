@@ -36,11 +36,34 @@ class Env(Addition):
 
         return dotenv.get_key(filename, keyname)
 
+class Python(Addition):
+    """
+    Python addition.
+    """
+
+    def __init__(self, line: str, executor: str, *, check: Optional[Callable[..., Any]] = None):
+
+        super().__init__(line, executor=executor, check=check)
+
+    def callback(self, args: list[str], kwargs: dict[str, str]) -> Any:
+        module = args.pop(0)
+        library = __import__(module)
+        func = args.pop(0)
+        lib = getattr(library, func, None)
+
+        if not lib:
+            raise ValueError(f"Function '{func}' not found in library '{module}'.")
+
+        if not callable(lib):
+            return lib
+
+        return lib(*args, **kwargs)
+
 class Yni(BaseClass):
     def __init__(self) -> None:
         self.variables: Dict[str, Header] = {}
         self.settings: Dict[str, bool] = {"set_is_list": False}
-        self.additions: Dict[str, tuple[type[Addition], Optional[Callable[..., Any]]]] = {"env": (Env, None)}
+        self.additions: Dict[str, tuple[type[Addition], Optional[Callable[..., Any]]]] = {"env": (Env, None), "python": (Python, None)}
 
     @classmethod
     def from_string(cls, string: str):
@@ -101,7 +124,8 @@ class Yni(BaseClass):
 
                         value = set(content_list) if not settings["set_is_list"] else content_list
 
-                current_header[key] = value
+
+                current_header[key.strip()] = value
 
         for header, attributes in ret.items():
             yni.variables[header] = Header(header, attributes)
