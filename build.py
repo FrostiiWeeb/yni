@@ -17,6 +17,6 @@ def build(setup_kwargs: dict):
         {
             "install_requires": requirements,
             "version": version,
-            "packages": setuptools.find_packages(exclude=["tests"], include=["yni"]),
+            "packages": setuptools.find_packages(exclude=["tests"], include=["yni", "yni/py.typed"]),
         }
     )
